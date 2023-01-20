@@ -162,7 +162,7 @@ SGFParser::SGFParser(Tree * _tree)
 //	CHECK_PTR(boardHandler);
 	stream = NULL;
 	tree = _tree;
-	readCodec = 0;
+	readCodec = QTextCodec::codecForLocale();
 	loadedfromfile = false;
 //	xmlParser = NULL;
 }
@@ -224,13 +224,13 @@ QString SGFParser::loadFile(const QString &fileName)
 	if (!file.exists())
 	{
         qDebug() << "Could not find file: " << fileName;
-		return NULL;
+		return QString();
 	}
 	
 	if (!file.open(QIODevice::ReadOnly))
 	{
         qDebug() << "Could not open file: " << fileName;
-		return NULL;
+		return QString();
 	}
 	
 	QTextStream txt(&file);
@@ -238,7 +238,7 @@ QString SGFParser::loadFile(const QString &fileName)
 	if (!setCodec())
 	{
         qDebug() << "Invalid text encoding given. Please check preferences!";
-		return NULL;
+		return QString();
 	}
 	
 	QString toParse;
@@ -247,17 +247,16 @@ QString SGFParser::loadFile(const QString &fileName)
 		toParse.append(txt.readLine() + "\n");
 	QString tmp="";
 	if (!parseProperty(toParse, "CA", tmp))		//codec
-		return NULL;
+		return QString();
 	if (!tmp.isEmpty())
 	{
 		if(!setCodec(tmp))
-			return NULL;
+			return QString();
 		toParse.clear();
 		txt.seek(0);
 	}
 	while (!txt.atEnd())
 		toParse.append(txt.readLine() + "\n");
-	readCodec = stream->codec();
 	file.close();
 #ifdef DEBUG_CODEC
 	QMessageBox::information(0, "READING", toParse);
@@ -349,14 +348,10 @@ bool SGFParser::setCodec(QString c)
 		return false;
 	}
 */	
-	if ( stream != NULL)
-	{
-		if (codec != NULL)
-			stream->setCodec(codec);
-		else 
-			stream->setCodec(QTextCodec::codecForLocale());
-	}
+		if (codec == NULL)
+			codec = QTextCodec::codecForLocale();
 
+    readCodec = codec;
 	return true;
 }
 
@@ -1082,7 +1077,7 @@ bool SGFParser::doParse(const QString &toParseStr)
 											if (c1 == 'Z')
 												moveStr = QString("a");
 											else
-												moveStr = c1.unicode() + 1;
+												moveStr = QChar(c1.unicode() + 1);
 										}
 									}
 
@@ -1537,20 +1532,20 @@ void SGFParser::writeGameHeader(GameData *gameData)
 	if(gameData->codec != QString())
 		*stream << "CA[" << gameData->codec << "]";
 	if (gameData->gameName.isEmpty())					// Skip game name if empty
-		*stream << endl;
+		*stream << Qt::endl;
 	else
 		*stream << "GN[" << gameData->gameName << "]"		// Game Name
-		<< endl;
+		<< Qt::endl;
 	*stream << "SZ[" << gameData->board_size << "]"				// Board size
 		<< "HA[" << gameData->handicap << "]"			// Handicap
 		<< "KM[" << gameData->komi << "]";				// Komi
-//		<< endl;
+//		<< Qt::endl;
 	
 	if (gameData->timelimit != 0)
 		*stream << "TM[" << gameData->timelimit << "]";		// Timelimit
 	
 	if (!gameData->overtime.isEmpty())
-		*stream << "OT[" << gameData->overtime << "]" << endl;		// Overtime
+		*stream << "OT[" << gameData->overtime << "]" << Qt::endl;		// Overtime
 	
 	if (!gameData->white_name.isEmpty())
 		*stream << "PW[" << gameData->white_name << "]";  // White name
@@ -1576,7 +1571,7 @@ void SGFParser::writeGameHeader(GameData *gameData)
 	if (!gameData->copyright.isEmpty())
 		*stream << "CP[" << gameData->copyright << "]";    // Copyright
 	
-	*stream << endl;
+	*stream << Qt::endl;
 }
 
 /*
@@ -1608,7 +1603,7 @@ void SGFParser::traverse(Move *t, GameData *gameData)
 			cnt = txt.length();
 			if (col % 10 == 0 || (col == 1 && cnt != 6) || cnt_old != 6 || col == -1)
 			{
-				*stream << endl;
+				*stream << Qt::endl;
 				col = 0;
 			}
 			*stream << txt;
@@ -1619,11 +1614,11 @@ void SGFParser::traverse(Move *t, GameData *gameData)
 		if (tmp != NULL && tmp->brother != NULL)
 		{
 			do {
-				*stream << endl;
+				*stream << Qt::endl;
 				traverse(tmp, NULL);
 			} while ((tmp = tmp->brother) != NULL);
 			break;
 		}
 	} while ((t = t->son) != NULL);
-	*stream << endl << ")";
+	*stream << Qt::endl << ")";
 }

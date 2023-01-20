@@ -40,7 +40,7 @@ void startqGo(void)
         restarting = true;
         mainwindow->deleteLater();
     }
-    mainwindow = new MainWindow(0,0);
+    mainwindow = new MainWindow(0,Qt::Widget);
     if(restarting)
         mainwindow->show();
 
@@ -59,10 +59,10 @@ int main(int argc, char *argv[])
 
     QTranslator qtTranslator;
     if (qtTranslator.load(QLocale(), "qt", "_",
-                      QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
+                      QLibraryInfo::path(QLibraryInfo::TranslationsPath)))
         app->installTranslator(&qtTranslator);
     else
-        qDebug() << "qgo translation file for locale " << QLocale() << " not found in " << QLibraryInfo::location(QLibraryInfo::TranslationsPath)+"/translations";
+        qDebug() << "qgo translation file for locale " << QLocale() << " not found in " << QLibraryInfo::path(QLibraryInfo::TranslationsPath)+"/translations";
 
     QTranslator qgoTranslator;
     if (qgoTranslator.load(QLocale(), "qgo", "_",

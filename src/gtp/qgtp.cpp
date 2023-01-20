@@ -20,6 +20,7 @@ email                :
 //#include <unistd.h>
 #include <stdlib.h>
 #include <QApplication>
+#include <QRegularExpression>
 #include <QDebug>
 enum CommandType {PROTOCOL, BOARDSIZE, KNOWN_COMMAND, LEVEL, KOMI, PLAY_BLACK, PLAY_WHITE, GENMOVE};
 #include "qgtp.h"
@@ -68,10 +69,10 @@ int QGtp::openGtpSession(QString path, QString args, int size, float komi, int h
 	
 	programProcess = new QProcess();
     programProcess->setReadChannel(QProcess::StandardOutput);
-    QStringList arguments = args.split(' ',QString::SkipEmptyParts);
+    QStringList arguments = args.split(' ',Qt::SkipEmptyParts);
     issueCmdNb = false;
 
-    if (path.contains(QRegExp("gnugo$", Qt::CaseInsensitive)))
+    if (path.contains(QRegularExpression(QLatin1String("gnugo$"), QRegularExpression::CaseInsensitiveOption)))
         issueCmdNb = true; // FIXME: are command numbers really gnugo-specific?
 
     connect(programProcess, &QProcess::readyRead, this, &QGtp::slot_readFromStdout);

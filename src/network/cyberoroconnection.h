@@ -21,6 +21,7 @@
 
 
 #include <QtNetwork>
+#include <QtCore5Compat/QTextCodec>
 #include "networkconnection.h"
 #include "messages.h"
 #include <vector>

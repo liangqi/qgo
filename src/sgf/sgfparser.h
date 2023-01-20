@@ -27,6 +27,7 @@
 #include "tree.h"
 
 #include <QtCore>
+#include <QtCore5Compat/QTextCodec>
 
 class GameData;
 
@@ -46,7 +47,7 @@ public:
 
 protected:
 	int minPos(int n1, int n2, int n3);
-	bool corruptSgf(int where=0, QString reason=QString::null);
+	bool corruptSgf(int where=0, QString reason=QString());
 
 	bool parseProperty(const QString &toParse, const QString &prop, QString &result);
 

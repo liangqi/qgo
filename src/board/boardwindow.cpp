@@ -36,7 +36,7 @@
 class BoardHandler;
 
 BoardWindow::BoardWindow(GameData *gd, bool iAmBlack , bool iAmWhite, class BoardDispatch * _dispatch)
-    : QMainWindow(0, 0), ui(new Ui::BoardWindow), addtime_menu(0), boardSize(gd->board_size)
+    : QMainWindow(0, Qt::Widget), ui(new Ui::BoardWindow), addtime_menu(0), boardSize(gd->board_size)
 {
     ui->setupUi(this);
 
@@ -149,7 +149,7 @@ BoardWindow::BoardWindow(GameData *gd, bool iAmBlack , bool iAmWhite, class Boar
 
 
     //Connects the 'edit' buttons to the slots
-    connect(editButtons, QOverload<int>::of(&QButtonGroup::buttonPressed), this, &BoardWindow::slotEditButtonPressed);
+    connect(editButtons, &QButtonGroup::idPressed, this, &BoardWindow::slotEditButtonPressed);
     connect(ui->deleteButton, &QPushButton::pressed, this, &BoardWindow::slotEditDelete);
     connect(ui->actionCoordinates, &QAction::toggled, ui->board, &Board::setShowCoords);
     connect(ui->actionFileSave, &QAction::triggered, this, &BoardWindow::slotFileSave);
@@ -575,13 +575,13 @@ bool BoardWindow::doSave(QString fileName, bool force)
 {
 	if (!force)
   	{
-     	if  (fileName == NULL ||
+     	if  (fileName == QString() ||
 			fileName.isNull() ||
           	fileName.isEmpty() ||
           	QDir(fileName).exists())
 		{
               	QString base = getCandidateFileName();
-				if (fileName == NULL || fileName.isNull() || fileName.isEmpty())
+				if (fileName == QString() || fileName.isNull() || fileName.isEmpty())
                 	fileName = base;
               	else
                 	fileName.append(base);
@@ -1067,7 +1067,7 @@ void BoardWindow::slotWheelEvent(QWheelEvent *e)
         return;
 
     // Needs an extra check on variable mouseState as state() does not work on Windows.
-    if (e->delta() > 0)
+    if (e->angleDelta().y() > 0)
     {
         if (e->buttons() == Qt::RightButton || e-> modifiers() ==  Qt::ShiftModifier)
             tree->slotNavNextVar();
@@ -1317,7 +1317,7 @@ void BoardWindow::setMoveData(int n, bool black, int brothers, int sons, bool ha
     {
         s.append(" (");
         s.append(black ? QObject::tr("W")+" " : QObject::tr("B")+" ");
-        s.append(QString(QChar(static_cast<const char>('A' + (lastX<9?lastX:lastX+1) - 1))) +
+        s.append(QString(QChar('A' + (lastX<9?lastX:lastX+1) - 1)) +
             QString::number(getBoardSize()-lastY+1) + ")");
     }
 
@@ -1424,7 +1424,7 @@ void BoardWindow::warnTimeBlack(TimeWarnState state)
     switch (state)
     {
     case TimeOK:
-        if(ui->pb_timeBlack->palette().color(QPalette::Background) != Qt::black)
+        if(ui->pb_timeBlack->palette().color(QPalette::Window) != Qt::black)
         {
             ui->pb_timeBlack->setPalette(QPalette(Qt::black));
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
@@ -1435,7 +1435,7 @@ void BoardWindow::warnTimeBlack(TimeWarnState state)
         }
         return;
     case TimeLow:
-        if(ui->pb_timeBlack->palette().color(QPalette::Background) == Qt::black)
+        if(ui->pb_timeBlack->palette().color(QPalette::Window) == Qt::black)
             ui->pb_timeBlack->setPalette(QPalette(Qt::yellow));
         else
             ui->pb_timeBlack->setPalette(QPalette(Qt::black));
@@ -1450,7 +1450,7 @@ void BoardWindow::warnTimeWhite(TimeWarnState state)
     switch (state)
     {
     case TimeOK:
-        if(ui->pb_timeWhite->palette().color(QPalette::Background) != Qt::black)
+        if(ui->pb_timeWhite->palette().color(QPalette::Window) != Qt::black)
         {
             ui->pb_timeWhite->setPalette(QPalette(Qt::black));
 #if defined(Q_OS_WIN) || defined(Q_OS_MAC)
@@ -1461,7 +1461,7 @@ void BoardWindow::warnTimeWhite(TimeWarnState state)
         }
         return;
     case TimeLow:
-        if(ui->pb_timeWhite->palette().color(QPalette::Background) == Qt::black)
+        if(ui->pb_timeWhite->palette().color(QPalette::Window) == Qt::black)
             ui->pb_timeWhite->setPalette(QPalette(Qt::yellow));
         else
             ui->pb_timeWhite->setPalette(QPalette(Qt::black));

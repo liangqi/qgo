@@ -3,7 +3,7 @@
 #message($${CONFIG})
 RESOURCES = application.qrc  \
 	    board/board.qrc
-QT += core gui widgets network multimedia
+QT += core gui widgets network multimedia core5compat
 DESTDIR = ../build
 TARGET = qgo
 OBJECTS_DIR = $${DESTDIR}/objects

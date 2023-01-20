@@ -30,7 +30,7 @@ Sound::Sound(const QString &filename, QObject *parent, int delay_msec)
 {
     player = new QMediaPlayer;
     if (QDir().exists(SOUND_PATH_PREFIX + filename))
-        player->setMedia(QMediaContent(QUrl::fromLocalFile(QDir().absoluteFilePath(SOUND_PATH_PREFIX + filename))));
+        player->setSource(QUrl::fromLocalFile(QDir().absoluteFilePath(SOUND_PATH_PREFIX + filename)));
     nextSound = QTime::currentTime();
 }
 

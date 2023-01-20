@@ -104,7 +104,7 @@ void MainWindow::openSGF(QString path)
 {
     SGFParser * MW_SGFparser = new SGFParser(NULL);
     QString SGFloaded = MW_SGFparser->loadFile(path);
-    if (SGFloaded == NULL)
+    if (SGFloaded == QString())
         return;
 
     GameData * GameLoaded = MW_SGFparser->initGame(SGFloaded, path);

@@ -50,7 +50,7 @@ public:
 
 	void removeGhosts();
 	void setVarGhost(StoneColor c, int x, int y);
-    void setMark(int x, int y, MarkType t, bool update=true, QString txt=QString::null, bool overlay=true);
+    void setMark(int x, int y, MarkType t, bool update=true, QString txt=QString(), bool overlay=true);
 	Mark* hasMark(int x, int y);
     void removeMark(int x, int y, bool update = false);
     void updateLastMove(Move * move);

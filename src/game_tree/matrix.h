@@ -82,7 +82,7 @@ public:
     void count(int & terrBlack, int & terrWhite, int & deadBlack, int & deadWhite);
 
     static const QString coordsToString(int x, int y)
-    { return QString(QChar(static_cast<const char>('a' + x))).append(QChar(static_cast<const char>('a' + y))); }
+    { return QString(QChar('a' + x)).append(QChar('a' + y)); }
 
     int makeMove(int x, int y, StoneColor c);
     bool addHandicapStones(int handicap);

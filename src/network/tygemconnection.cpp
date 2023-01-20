@@ -43,6 +43,7 @@
 #include "playergamelistings.h"
 #include "matchnegotiationstate.h"
 #include <QMessageBox>
+#include <QtCore5Compat/QRegExp>
 
 //#define RE_DEBUG
 
@@ -4569,7 +4570,7 @@ unsigned int TygemConnection::rankToScore(QString rank)
 {
 	QString buffer = rank;
 	//buffer.replace(QRegExp("[pdk+?\\*\\s]"), "");
-	buffer.replace(QRegExp("[pdk]"), "");
+	buffer.replace(QRegularExpression("[pdk]"), "");
 	int ordinal = buffer.toInt();
 	unsigned int rp;
 
@@ -7337,10 +7338,10 @@ int TygemConnection::compareRanks(QString rankA, QString rankB)
 	if(rankA.contains("k"))
 	{
 		QString buffer = rankA;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalA = buffer.toInt();
 		buffer = rankB;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalB = buffer.toInt();
 		if(ordinalA > ordinalB)
 			return -1;
@@ -7352,10 +7353,10 @@ int TygemConnection::compareRanks(QString rankA, QString rankB)
 	else
 	{
 		QString buffer = rankA;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalA = buffer.toInt();
 		buffer = rankB;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalB = buffer.toInt();
 		if(ordinalA > ordinalB)
 			return 1;

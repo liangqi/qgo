@@ -35,7 +35,7 @@ msginfo(m), connection(c), type(t)
 	
     connect(qsocket, &QTcpSocket::connected, this, &QuickConnection::OnConnected);
     connect(qsocket, &QTcpSocket::readyRead, this, &QuickConnection::OnReadyRead);
-    connect(qsocket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), this, &QuickConnection::OnError);
+    connect(qsocket, &QAbstractSocket::errorOccurred, this, &QuickConnection::OnError);
 	
     qDebug() << QString("QuickConnection::QuickConnection : Connecting to") << hostname << ":" << port;
 	
@@ -51,7 +51,7 @@ qsocket(q), msginfo(m), connection(c), type(t)
 
     connect(qsocket, &QTcpSocket::connected, this, &QuickConnection::OnConnected);
     connect(qsocket, &QTcpSocket::readyRead, this, &QuickConnection::OnReadyRead);
-    connect(qsocket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), this, &QuickConnection::OnError);
+    connect(qsocket, &QAbstractSocket::errorOccurred, this, &QuickConnection::OnError);
 	
 	success = !(qsocket->state() != QTcpSocket::UnconnectedState);
 	if(success != 0)

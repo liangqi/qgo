@@ -23,6 +23,7 @@
 #ifndef TYGEMCONNECTION_H
 #define TYGEMCONNECTION_H
 #include <QtNetwork>
+#include <QtCore5Compat/QTextCodec>
 #include "networkconnection.h"
 #include "messages.h"
 #include <vector>

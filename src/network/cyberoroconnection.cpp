@@ -41,6 +41,7 @@
 #include "quickconnection.h"
 #include "matchnegotiationstate.h"
 #include <QMessageBox>
+#include <QtCore5Compat/QRegExp>
 
 #ifdef NEWPROTOCOL
 #include "protocol.h"
@@ -3478,7 +3479,7 @@ unsigned int CyberOroConnection::rankToScore(QString rank)
 {
 	QString buffer = rank;
 	//buffer.replace(QRegExp("[pdk+?\\*\\s]"), "");
-	buffer.replace(QRegExp("[pdk]"), "");
+	buffer.replace(QRegularExpression("[pdk]"), "");
 	int ordinal = buffer.toInt();
 	unsigned int rp;
 
@@ -3856,9 +3857,9 @@ void CyberOroConnection::handleBroadcastGamesList(unsigned char * msg, unsigned 
 		 * but I'm not sure where to display them. FIXME */
 		/* [K] [C] [J], let's not kid ourself about the pro game countries */
 		QString country = getCountryFromCode(game_record[27]);
-		aGameListing->_black_name += ("[" + country[0] + "]");
+		aGameListing->_black_name += QLatin1String("[") + country[0] + QLatin1String("]");
 		country = getCountryFromCode(p[1]);
-		aGameListing->_white_name += ("[" + country[0] + "]"); 
+		aGameListing->_white_name += QLatin1String("[") + country[0] + QLatin1String("]");
 		p += 2;
 		
 #ifdef RE_DEBUG
@@ -5127,9 +5128,9 @@ void CyberOroConnection::handleBettingMatchStart(unsigned char * msg, unsigned i
 		p += 10;
 		//printf("Othername2: %s\n", name);
 		QString country = getCountryFromCode(msg[68]);
-		aGameListing->_black_name += ("[" + country[0] + "]");
+		aGameListing->_black_name += QLatin1String("[") + country[0] + QLatin1String("]");
 		country = getCountryFromCode(p[1]);
-		aGameListing->_white_name += ("[" + country[0] + "]"); 
+		aGameListing->_white_name += QLatin1String("[") + country[0] + QLatin1String("]");
 		p += 2;
 		if((msg[70] & 0xC0) == 0xC0)
 		{
@@ -6828,10 +6829,10 @@ int CyberOroConnection::compareRanks(QString rankA, QString rankB)
 	if(rankA.contains("k"))
 	{
 		QString buffer = rankA;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalA = buffer.toInt();
 		buffer = rankB;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalB = buffer.toInt();
 		if(ordinalA > ordinalB)
 			return -1;
@@ -6843,10 +6844,10 @@ int CyberOroConnection::compareRanks(QString rankA, QString rankB)
 	else
 	{
 		QString buffer = rankA;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalA = buffer.toInt();
 		buffer = rankB;
-		buffer.replace(QRegExp("[pdk]"), "");
+		buffer.replace(QRegularExpression("[pdk]"), "");
 		int ordinalB = buffer.toInt();
 		if(ordinalA > ordinalB)
 			return 1;

@@ -20,6 +20,7 @@
  ***************************************************************************/
 
 #include <QtDebug>
+#include <QtCore5Compat/QRegExp>
 #include "igsconnection.h"
 #include "consoledispatch.h"
 #include "room.h" // Should not depend on room FIXME
@@ -802,7 +803,7 @@ unsigned int IGSConnection::rankToScore(QString rank)
 
 	QString buffer = rank;
 	//buffer.replace(QRegExp("[pdk+?\\*\\s]"), "");
-	buffer.replace(QRegExp("[pdk+?]"), "");
+	buffer.replace(QRegularExpression("[pdk+?]"), "");
 	int ordinal = buffer.toInt();
 	unsigned int score;
 
@@ -1460,7 +1461,7 @@ void IGSConnection::handle_games(QString line)
 				// skip first line
         return;
     line.remove(QRegularExpression("[\\[\\]\\(\\)]"));
-    QStringList words = line.split(QChar(' '),QString::SkipEmptyParts);
+    QStringList words = line.split(QChar(' '),Qt::SkipEmptyParts);
     bool ok;
     int number = words.at(1).toInt(&ok);
     if (!ok)
@@ -2907,7 +2908,7 @@ void IGSConnection::handle_move(QString line)
 	}
 	else if (line.contains("GAMERPROPS"))
 	{
-        QStringList words = line.split(QRegExp("[ :]"), QString::SkipEmptyParts);
+        QStringList words = line.split(QRegularExpression("[ :]"), Qt::SkipEmptyParts);
 		GameData * gd;
         int game_number = words[2].toInt();
 		
@@ -3317,9 +3318,9 @@ void IGSConnection::handle_shout(QString line)
 				// {Match 116: xxxx [19k*] vs. yyyy1 [18k*] }
 				// {116:xxxx[19k*]yyyy1[18k*]}
 				// WING: {Match 41: o4641 [10k*] vs. Urashima [11k*] H:2 Komi:3.5}
-		line.replace(QRegExp("vs. "), "");
-		line.replace(QRegExp("Match "), "");
-		line.replace(QRegExp(" "), "");
+		line.replace(QRegularExpression("vs. "), "");
+		line.replace(QRegularExpression("Match "), "");
+		line.replace(QRegularExpression(" "), "");
 		int number = element(line, 0, "{", ":").toInt();
 		
         GameListing * aGame = room->getGameListing(number);
@@ -4384,7 +4385,7 @@ QString IGSConnection::element(const QString &line, int index, const QString &de
 	// kill trailing white spaces
     while (/*(int)*/ len > 0)
     {
-        if (line[len-1] < 33)
+        if (line[len-1] < QChar(33))
             len--;
         else
             break;
@@ -4477,12 +4478,12 @@ unsigned int IGSConnection::idleTimeToSeconds(QString time)
 	/* I guess its either minutes or seconds here, not both */
 	if(time.contains("m"))
 	{
-		i.replace(QRegExp("[m*]"), "");
+		i.replace(QRegularExpression("[m*]"), "");
 		return (60 * i.toInt());
 	}
 	else
 	{
-		i.replace(QRegExp("s"), "");
+		i.replace(QRegularExpression("s"), "");
 		return i.toInt();
 	}
 	/*m1 = time1; m2 = time2;

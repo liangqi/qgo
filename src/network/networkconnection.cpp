@@ -66,7 +66,7 @@ bool NetworkConnection::openConnection(const QString & host, const unsigned shor
     connect(qsocket, &QTcpSocket::connected, this, &NetworkConnection::OnConnected);
     connect(qsocket, &QTcpSocket::readyRead, this, &NetworkConnection::OnReadyRead);
     connect(qsocket, &QTcpSocket::disconnected, this, &NetworkConnection::OnConnectionClosed);
-    connect(qsocket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), this, &NetworkConnection::OnError);
+    connect(qsocket, &QAbstractSocket::errorOccurred, this, &NetworkConnection::OnError);
 
 	if(qsocket->state() != QTcpSocket::UnconnectedState)
 	{
@@ -74,7 +74,7 @@ bool NetworkConnection::openConnection(const QString & host, const unsigned shor
 		return 0;
 	}
 	//remove asserts later
-	Q_ASSERT(host != 0);
+	Q_ASSERT(!host.isEmpty());
 	Q_ASSERT(port != 0);
 
 	if(!not_main_connection)

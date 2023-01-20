@@ -87,8 +87,8 @@ void WingConnection::sendMatchRequest(MatchRequest * mr)
 	else
 	{
 		sendText("match " + mr->opponent + " " +
-				mr->maintime + " " +
-				mr->periodtime + " " +
+				QString::number(mr->maintime) + " " +
+				QString::number(mr->periodtime) + " " +
 				QString::number(mr->board_size) + " " +
 				//extra time?
 				color + "\r\n");
@@ -139,7 +139,7 @@ void WingConnection::sendMove(unsigned int game_id, MoveRecord * move)
 			/* Why do we send the id here but
 			* not with the others?  Can we play
 			* multiple games?? */
-			sendText(QString(c1) + QString::number(c2) + " " + game_id);	
+			sendText(QString(c1) + QString::number(c2) + " " + QString::number(game_id));	
 		}
 		break;
 		case MoveRecord::DONE_SCORING:

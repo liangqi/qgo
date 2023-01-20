@@ -30,6 +30,7 @@
 #include "network/gamedialogflags.h"
 #include "network/playergamelistings.h"
 
+#include <QtCore5Compat/QRegExp>
 
 GameDialog::GameDialog(NetworkConnection * conn, const PlayerListing * opp)
 	: QDialog(), Ui::GameDialog(), connection(conn), opponent(opp)
@@ -1396,10 +1397,10 @@ bool GameDialog::getProperKomiHandicap(QString rankA, QString rankB, float * kom
 {
 	/* Check for k, d, or p (as d), calc difference, */
 	QString buffer = rankA;
-	buffer.replace(QRegExp("[pdk+?]"), "");
+	buffer.replace(QRegularExpression("[pdk+?]"), "");
 	int ordinalA = buffer.toInt();
 	buffer = rankB;
-	buffer.replace(QRegExp("[pdk+?]"), "");
+	buffer.replace(QRegularExpression("[pdk+?]"), "");
 	int ordinalB = buffer.toInt();
 	int difference;
 	bool A_lowerthan_B = false;
